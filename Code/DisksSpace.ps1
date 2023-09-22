@@ -16,8 +16,8 @@
     Un fichier d’erreur devra aussi être crée
 
   	
-.PARAMETER MachineList
-    Ce pramètre permet d'avoir la liste des machines.
+.PARAMETER MachineName
+    Ce pramètre permet d'avoir le nom de la machine actuelle.
 	
 
 .OUTPUTS
@@ -33,27 +33,38 @@
 #>
 
 
-param($MachineList)
+param($MachineName)
 
 ###################################################################################################################
 # Zone de définition des variables et fonctions, avec exemples
 
-$date= Get-Date # Variable qui importe la date
-$path= "c:\temp" # Variable qui definit un chemin dans le quel on ajoute les différents fichiers de log
-
-###################################################################################################################
-
-# Affiche l'aide si un ou plusieurs paramètres ne sont par renseignés, "safe guard clauses" permet d'optimiser l'exécution et la lecture des scripts
-if(!$Param1 -or !$Param2 -or !$Param3)
-{
-    Get-Help $MyInvocation.Mycommand.Path
-	exit
-}
 
 ###################################################################################################################
 # Corps du script
 
-# Ce que fait le script, ici, afficher un message
+# Obtenez le nom de la machine actuelle
+$MachineName = $env:COMPUTERNAME
+
+# Spécifiez le chemin complet du fichier journal et du fichier d'erreur
+$filePath = "S:\Logs\Fichier.log"
+$errorFilePath = "S:\Logs\Erreur.log"
+
+try {
+    # Obtenez la date actuelle au format souhaité (par exemple, "yyyy-MM-dd HH:mm:ss")
+    $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+
+    # Créez ou ouvrez le fichier journal en mode ajout (Append)
+    Add-Content -Path $filePath -Value "Date : $date"
+}
+catch {
+    # En cas d'erreur, capturez l'erreur et enregistrez-la dans le fichier d'erreur
+    $errorMessage = "Erreur à $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') : $($_.Exception.Message)"
+    Add-Content -Path $errorFilePath -Value $errorMessage
+}
+
+
+
+
 Write-Host "Hello World"
     
 
