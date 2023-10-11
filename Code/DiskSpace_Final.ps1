@@ -17,23 +17,27 @@ d'un groupe de machines. Vous pouvez spécifier les noms de ces machines en tant
 Le script génère un fichier journal unique pour chaque machine pour stocker ces informations. En cas d'erreurs, il crée également un fichier d'erreur.
 
  
-
-.PARAMETER Subnet
+.PARAMETER subnet
 Ce paramètre permet de spécifier le sous-réseau à analyser.
 
- 
 
-.PARAMETER MachineName
+.PARAMETER machineName
 Ce paramètre permet de spécifier les noms de machine pour lesquels vous souhaitez créer les fichiers de log.
 
  
+.PARAMETER logFilePath
+Ce paramètre permet de spécifier le chemin du fichier de log
+
+
+.PARAMETER logMessage
+Ce paramètre permet de spécifier le message contenant l'espace des partitions
+
 
 .OUTPUTS
 Un fichier de log unique sera créé par machine
 Un fichier d'erreur sera créé
 
  
-
 .EXAMPLE
 (avec les droits admin)
 .\DisksSpace.ps1 -Subnet 172.20.20
@@ -44,7 +48,6 @@ Fichier créé : C:\logs\DESKTOP-R5VBVBC.local.log
 Résultat : des fichiers de logs seront créés pour toutes les machines du même sous-réseau.
 
  
-
 .EXAMPLE
 .\DisksSpace.ps1 -Subnet 172.20.20 -MachineName "DESKTOP-HLVMOLF", "DESKTOP-R5VBVBC.local"
 Résultat : des fichiers de logs seront créés uniquement pour les machines spécifiées.
@@ -55,7 +58,6 @@ param(
 )
 
  
-
 # Fonction pour ajouter la date au début d'une ligne de log
 function Add-DateToLog {
     param(
