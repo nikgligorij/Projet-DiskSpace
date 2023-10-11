@@ -38,8 +38,8 @@ Résultat : des fichiers de logs seront créés pour toutes les machines du mêm
 Résultat : des fichiers de logs seront créés uniquement pour les machines spécifiées.
 #>
 param(
-    [string]$Subnet,
-    [string[]]$MachineName
+    [string]$subnet,
+    [string[]]$machineName
 )
 
  
@@ -47,24 +47,24 @@ param(
 # Fonction pour ajouter la date au début d'une ligne de log
 function Add-DateToLog {
     param(
-        [string]$LogFilePath,
-        [string]$LogMessage
+        [string]$logFilePath,
+        [string]$logMessage
     )
 
  
 
     $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $logEntry = "$date - $LogMessage"
+    $logEntry = "$date - $logMessage"
 
  
 
-    Add-Content -Path $LogFilePath -Value $logEntry
+    Add-Content -Path $logFilePath -Value $logEntry
 }
 
  
 
 # Validation du paramètre Subnet
-if (-not $Subnet) {
+if (-not $subnet) {
     Write-Host "Veuillez spécifier le sous-réseau avec l'option -Subnet."
     exit 1
 }
@@ -72,8 +72,8 @@ if (-not $Subnet) {
  
 
 # Si -MachineName est spécifié, utilisez ces noms de machine, sinon, recherchez les machines dans le sous-réseau
-if ($MachineName) {
-    $foundMachines = $MachineName
+if ($machineName) {
+    $foundMachines = $machineName
 }
 else {
     # Créez un tableau pour stocker les noms de machines trouvées
@@ -83,7 +83,7 @@ else {
 
     # Parcourez les 5 premières adresses IP dans le sous-réseau spécifié par l'utilisateur
     for ($i = 1; $i -le 5; $i++) {
-        $ip = "$Subnet.$i"
+        $ip = "$subnet.$i"
         $pingResult = Test-Connection -ComputerName $ip -Count 1 -ErrorAction SilentlyContinue
 
  
