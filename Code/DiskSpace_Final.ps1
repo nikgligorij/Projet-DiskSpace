@@ -9,29 +9,41 @@ Date: 22.09.2023
 .SYNOPSIS
 Evaluer le pourcentage libre des disques d’une machine à distance
 
+ 
+
 .DESCRIPTION
 Ce script PowerShell permet de contrôler à distance l'espace disque disponible et l'espace disque total sur les disques
 d'un groupe de machines. Vous pouvez spécifier les noms de ces machines en tant que paramètres à l'aide de l'option -MachineName.
 Le script génère un fichier journal unique pour chaque machine pour stocker ces informations. En cas d'erreurs, il crée également un fichier d'erreur.
 
+ 
+
 .PARAMETER Subnet
 Ce paramètre permet de spécifier le sous-réseau à analyser.
+
+ 
 
 .PARAMETER MachineName
 Ce paramètre permet de spécifier les noms de machine pour lesquels vous souhaitez créer les fichiers de log.
 
+ 
+
 .OUTPUTS
 Un fichier de log unique sera créé par machine
 Un fichier d'erreur sera créé
+
+ 
 
 .EXAMPLE
 (avec les droits admin)
 .\DisksSpace.ps1 -Subnet 172.20.20
 Machine trouvée : DESKTOP-HLVMOLF (172.20.20.2)
 Machine trouvée : DESKTOP-R5VBVBC.local (172.20.20.3)
-Fichier créé : C:\DESKTOP-HLVMOLF.log
-Fichier créé : C:\DESKTOP-R5VBVBC.local.log
+Fichier créé : C:\logs\DESKTOP-HLVMOLF.log
+Fichier créé : C:\logs\DESKTOP-R5VBVBC.local.log
 Résultat : des fichiers de logs seront créés pour toutes les machines du même sous-réseau.
+
+ 
 
 .EXAMPLE
 .\DisksSpace.ps1 -Subnet 172.20.20 -MachineName "DESKTOP-HLVMOLF", "DESKTOP-R5VBVBC.local"
@@ -55,9 +67,6 @@ function Add-DateToLog {
 
     $date = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logEntry = "$date - $logMessage"
-
- 
-
     Add-Content -Path $logFilePath -Value $logEntry
 }
 
@@ -67,6 +76,14 @@ function Add-DateToLog {
 if (-not $subnet) {
     Write-Host "Veuillez spécifier le sous-réseau avec l'option -Subnet."
     exit 1
+}
+
+ 
+
+# Créer le dossier "logs" s'il n'existe pas
+$logsFolderPath = "C:\logs"
+if (-not (Test-Path -Path $logsFolderPath -PathType Container)) {
+    New-Item -Path $logsFolderPath -ItemType Directory
 }
 
  
@@ -113,10 +130,7 @@ foreach ($machineName in $foundMachines) {
  
 
         # Chemin complet du fichier du pourcentage des disques
-        $logFilePath = "C:\$machineName.log"
-
- 
-
+        $logFilePath = "C:\logs\$machineName.log"
 
  
 
@@ -139,7 +153,7 @@ foreach ($machineName in $foundMachines) {
     catch {
         # En cas d'erreur, l'erreur est capturée et enregistrée dans un fichier d'erreur
         $errorMessage = "Erreur à $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') sur $machineName : $($_.Exception.Message)"
-        $errorFilePath = "C:\$machineName-Erreur.log"
+        $errorFilePath = "C:\logs\$machineName-Erreur.log"
         Add-Content -Path $errorFilePath -Value $errorMessage
         Write-Host "Erreur : $errorMessage"
     }
@@ -149,7 +163,7 @@ foreach ($machineName in $foundMachines) {
 
 # Créez un fichier d'erreur vide pour chaque machine trouvée même si aucune erreur n'a été rencontrée
 foreach ($machineName in $foundMachines) {
-    $errorFilePath = "C:\$machineName-Erreur.log"
+    $errorFilePath = "C:\logs\$machineName-Erreur.log"
     if (!(Test-Path -Path $errorFilePath)) {
         # Si le fichier d'erreur n'existe pas, créez-le
         New-Item -ItemType File -Path $errorFilePath
