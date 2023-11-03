@@ -34,17 +34,26 @@ Un fichier d'erreur sera créé
 
 .EXAMPLE
 (avec les droits admin)
-.\DisksSpace_Final.ps1 -machinesName DESKTOP-HLVMOLF, DESKTOP-R5VBVBC
-Machine trouvée : DESKTOP-HLVMOLF (172.20.20.2)
-Machine trouvée : DESKTOP-R5VBVBC.local (172.20.20.3)
+.\Y-122-MSN-DiskSpace.ps1 -machinesName DESKTOP-HLVMOLF, DESKTOP-R5VBVBC
+    Répertoire : C:\
+
+Mode                 LastWriteTime         Length Name                                           
+----                 -------------         ------ ----                                           
+d-----        03.11.2023     09:56                logs                                           
 Fichier créé : C:\logs\DESKTOP-HLVMOLF.log
-Fichier créé : C:\logs\DESKTOP-R5VBVBC.local.log
+Fichier créé : C:\logs\DESKTOP-R5VBVBC.log
+Répertoire : C:\logs
+
+Mode                 LastWriteTime         Length Name                                           
+----                 -------------         ------ ----                                           
+-a----        03.11.2023     09:56              0 DESKTOP-HLVMOLF-Erreur.log                     
+-a----        03.11.2023     09:56              0 DESKTOP-R5VBVBC-Erreur.log                     
+
 Résultat : des fichiers de logs seront créés pour toutes les machines du même sous-réseau.
 
  
-
 .EXAMPLE
-.\DisksSpace_Final.ps1 -Subnet 172.20.20 -MachinesName "DESKTOP-HLVMOLF", "DESKTOP-R5VBVBC.local"
+.\Y-122-MSN-DiskSpace.ps1 -Subnet 172.20.20 -MachinesName "DESKTOP-HLVMOLF", "DESKTOP-R5VBVBC.local"
 Résultat : des fichiers de logs seront créés uniquement pour les machines spécifiées.
 #>
 
